@@ -15,7 +15,7 @@ requirements = [
     "sentencepiece>=0.2.0",
     "tqdm>=4.66.4",
     "datasets>=2.19.1",
-    "torch>=2.2.2"
+    "torch"
 ]
 
 test_requirements = []

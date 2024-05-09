@@ -4,15 +4,21 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [ ]
+requirements = [
+    "transformers>=4.30.2",
+    "sentencepiece>=0.2.0",
+    "tqdm>=4.66.4",
+    "datasets>=2.19.1",
+    "torch>=2.2.2"
+]
 
-test_requirements = [ ]
+test_requirements = []
 
 setup(
     author="Federico Bianchi",

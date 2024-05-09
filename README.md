@@ -9,7 +9,8 @@ We require a python environment with a fully functional PyTorch
 installation. Then, please install our dependencies with:
 
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/MilaNLProc/psycho-embeddings.git
+pip install -e psycho-embeddings
 ```
 
 ## Examples

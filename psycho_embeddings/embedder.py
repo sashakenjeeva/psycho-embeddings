@@ -60,7 +60,7 @@ class ContextualizedEmbedder:
         # Decide model
         if model_type == "clip_text":
             use_clip = True
-        elif backend == "llm":
+        elif model_type == "llm":
             model_type = False
         else:
             raise ValueError('model_type must be one of: "llm", "clip"')

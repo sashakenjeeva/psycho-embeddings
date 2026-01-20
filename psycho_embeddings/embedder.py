@@ -59,9 +59,9 @@ class ContextualizedEmbedder:
 
         # Decide model
         if model_type == "clip_text":
-            use_clip = True
+            use_clip = (getattr(cfg, "model_type", None) == "clip")
         elif model_type == "llm":
-            model_type = False
+            use_clip = False
         else:
             raise ValueError('model_type must be one of: "llm", "clip"')
 

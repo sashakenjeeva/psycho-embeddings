@@ -37,7 +37,7 @@ def find_sub_list(sl: List, l: List):
 
 
 class ContextualizedEmbedder:
-    def __init__(self, model_name: str, max_length: int, device: str = "cpu"):
+    def __init__(self, model_name: str, max_length: int, device: str = "cpu", model_type: str="llm"):
         """
         Contextualized embedder as a wrapper of HuggingFace models.
 
@@ -52,13 +52,41 @@ class ContextualizedEmbedder:
         """
 
         self.model_name = model_name
-        self.model = AutoModel.from_pretrained(
-            model_name, output_hidden_states=True
-        ).to(device)
-        self.model.eval()
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.max_length = max_length
         self.device = device
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        cfg = AutoConfig.from_pretrained(model_name)
+
+
+        # Decide model
+        if model_type == "clip_text":
+            use_clip = True
+        elif backend == "llm":
+            model_type = False
+        else:
+            raise ValueError('model_type must be one of: "llm", "clip"')
+
+        self.is_clip = use_clip
+
+        # Load model
+        if self.is_clip:
+            self.model = CLIPTextModelWithProjection.from_pretrained(
+                model_name, output_hidden_states=True
+            ).to(device)
+            # CLIP text encoder has a hard max length (usually 77)
+            clip_max = getattr(self.tokenizer, "model_max_length", None) or getattr(
+                self.model.config, "max_position_embeddings", 77
+            )
+            self.max_length = min(max_length, clip_max)
+        else:
+            self.model = AutoModel.from_pretrained(
+                model_name, output_hidden_states=True
+            ).to(device)
+            # For non-CLIP, keep the user's choice but cap at tokenizer limit if present
+            tok_max = getattr(self.tokenizer, "model_max_length", None)
+            self.max_length = min(max_length, tok_max) if tok_max else max_length
+
+        self.model.eval()
+
 
     def subset_of_tokenized(self, list_of_tokens: List[int]):
         """

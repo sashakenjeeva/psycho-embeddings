@@ -69,10 +69,10 @@ class ContextualizedEmbedder:
 
         # Load model
         if self.is_clip:
-            self.model = CLIPTextModelWithProjection.from_pretrained(
+            self.model = CLIPTextModel.from_pretrained(
                 model_name, output_hidden_states=True
             ).to(device)
-            # CLIP text encoder has a hard max length (usually 77)
+            # max length is 77 for clip
             clip_max = getattr(self.tokenizer, "model_max_length", None) or getattr(
                 self.model.config, "max_position_embeddings", 77
             )
